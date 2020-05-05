@@ -1,4 +1,9 @@
-## 대괄호로 부분은 커밋하지 말것 주석풀고 사용할것
+## 주석부분은 커밋하지 말것 주석풀고 사용할것
+graphql:
+  spqr:
+    gui:
+      enabled: true
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
