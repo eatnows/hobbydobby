@@ -1,0 +1,7 @@
+## 대괄호로 부분은 커밋하지 말것 주석풀고 사용할것
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ##JDBC URL##
+    username: ##DB ID##
+    password: ##DB PASSWORD##
