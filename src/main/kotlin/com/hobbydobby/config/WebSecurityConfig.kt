@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http : HttpSecurity) {
         http.csrf().ignoringAntMatchers("/gui","/graphql").and()
                 .authorizeRequests()
