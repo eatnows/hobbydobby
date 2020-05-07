@@ -1,6 +1,6 @@
 package com.hobbydobby.service.member
 
-import com.hobbydobby.repository.member.Member
+import com.hobbydobby.domain.member.Member
 import com.hobbydobby.repository.member.MemberRepository
 import org.springframework.stereotype.Service
 
