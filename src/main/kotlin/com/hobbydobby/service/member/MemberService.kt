@@ -28,4 +28,26 @@ class MemberService(
             }
         }
     }
+
+    /**
+     * 이메일 체크
+     */
+    fun isValidEmail(email : String) = try {
+        val member = memberRepository.findByEmail(email)
+        member != null
+    } catch (ex : Exception) {
+        ex.printStackTrace()
+        false
+    }
+
+    /**
+     * 닉네임 체크
+     */
+    fun isValidNickname(nickname : String) = try {
+        val member = memberRepository.findByNickname(nickname)
+        member != null
+    } catch (ex : Exception) {
+        ex.printStackTrace()
+        false
+    }
 }

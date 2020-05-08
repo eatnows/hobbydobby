@@ -3,7 +3,9 @@ package com.hobbydobby.controller.member
 import com.hobbydobby.domain.member.MemberSingUpRequest
 import com.hobbydobby.domain.member.MemberSingUpResponse
 import com.hobbydobby.service.member.MemberService
+import com.hobbydobby.util.StringUtil
 import io.leangen.graphql.annotations.GraphQLMutation
+import io.leangen.graphql.annotations.GraphQLQuery
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi
 import org.springframework.stereotype.Controller
 
@@ -23,5 +25,25 @@ class MemberApiController(
     fun singUp(request : MemberSingUpRequest): MemberSingUpResponse {
         val result = memberService.signUp(request.toEntity())
         return MemberSingUpResponse(result = result["result"]?:"fail", message = result["message"]?:"")
+    }
+
+    /**
+     * Email 중복체크 true일 경우 사용가능
+     */
+    @GraphQLQuery(name = "isValidEmail", description = "이메일 중복체크")
+    fun isValidEmail(email : String) = if(StringUtil.isEmail(email)) {
+        memberService.isValidEmail(email)
+    } else {
+        false
+    }
+
+    /**
+     * 닉네임 중복체크 true일 경우 사용가능
+     */
+    @GraphQLQuery(name = "isValidNickname", description = "닉네임 중복체크")
+    fun isValidNickname(nickname : String) = if(nickname.length < 4 || nickname.length > 20) {
+        false
+    } else {
+        memberService.isValidEmail(nickname)
     }
 }
