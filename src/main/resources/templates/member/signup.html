@@ -7,46 +7,66 @@
     <script th:src="@{/js/signUp.js}"></script>
 </head>
 <body>
+<form action="#" method="post">
 <table>
     <caption>회원가입</caption>
     <tr>
         <th>이메일</th>
-        <td><input type="text" name="email" id="email" /></td>
+        <td>
+            <sapn class="ps_box"><input type="email" name="email" id="email" onchange="checkEmail();" /></sapn>
+            <span id="emailinfo"></span>
+        </td>
     </tr>
     <tr>
         <th>비밀번호</th>
-        <td><input type="password" name="password" id="password" /></td>
+        <td>
+            <sapn class="ps_box"><input type="password" name="password" id="password" onchange="checkPassword();"/></sapn>
+            <span id="pwdinfo"></span>
+        </td>
     </tr>
     <tr>
         <th>닉네임</th>
-        <td><input type="text" name="nickname" id="nickname" /></td>
+        <td>
+            <span class="ps_box"><input type="text" name="nickname" id="nickname" onchange="duplicateNicknameCheck();"/></span>
+        </td>
     </tr>
     <tr>
         <th>이름</th>
-        <td><input type="text" name="name" id="name" /></td>
+        <td>
+            <sapn class="ps_box"><input type="text" name="name" id="name" /></sapn>
+        </td>
     </tr>
     <tr>
         <th>생년월일</th>
-        <td><input type="text" name="birth" id="birth" /></td>
+        <td>
+            <sapn class="ps_box"><input type="text" name="birth" id="birth" /></sapn>
+        </td>
     </tr>
     <tr>
         <th>휴대폰번호</th>
-        <td><input type="text" name="hp" id="hp" /></td>
+        <td>
+            <span class="ps_box"><input type="text" name="hp" id="hp" /></span>
+        </td>
     </tr>
     <tr>
         <th>주소</th>
-        <td><input type="text" name="address" id="address" /></td>
+        <td>
+            <span class="ps_box"><input type="text" name="address" id="address" /></span>
+        </td>
     </tr>
     <tr>
         <th>자기소개</th>
-        <td><textarea name="introduce" id="introduce"></textarea></td>
+        <td>
+            <span class="ps_box"><textarea name="introduce" id="introduce"></textarea></span>
+        </td>
     </tr>
     <tr>
         <td colspan="2">
             <button type="button" onclick="signUpAjax();">확인</button>
-            <button type="reset">취소</button>
+            <button type="reset" onclick="history.back();">취소</button>
         </td>
     </tr>
 </table>
+</form>
 </body>
 </html>
