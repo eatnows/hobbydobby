@@ -44,6 +44,6 @@ class MemberApiController(
     fun isValidNickname(nickname : String) = if(nickname.length < 4 || nickname.length > 20) {
         false
     } else {
-        memberService.isValidEmail(nickname)
+        memberService.isValidNickname(nickname)
     }
 }
