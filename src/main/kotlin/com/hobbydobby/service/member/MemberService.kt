@@ -34,7 +34,7 @@ class MemberService(
      */
     fun isValidEmail(email : String) = try {
         val member = memberRepository.findByEmail(email)
-        member != null
+        member == null
     } catch (ex : Exception) {
         ex.printStackTrace()
         false
@@ -45,7 +45,7 @@ class MemberService(
      */
     fun isValidNickname(nickname : String) = try {
         val member = memberRepository.findByNickname(nickname)
-        member != null
+        member == null
     } catch (ex : Exception) {
         ex.printStackTrace()
         false
