@@ -1,9 +1,13 @@
+var emailOk;
+var nicknameOk;
+
 $(function(){
     // 자기소개 글자수 카운팅
     $("#introduce").keyup(function(){
         var count = $(this).val().length;
         $("#introCount").html(count+"/100");
     });
+
 });
 
 // signUp폼에서 넘어온 값을 ajax를 이용해서 graphql 쿼리 질의하기
@@ -13,7 +17,9 @@ function signUpAjax(){
     var nickname = $("#nickname").val();
     var name = $("#name").val();
     var birthday = $("#birth").val();
-    var phone = $("#hp").val();
+    var phone = $("#hp1").val()+$("#hp2").val()+$("#hp3").val();
+
+
     var address = $("#address").val();
     var introduce = $("#introduce").val();
     var queryA = 'mutation{signUpMember(request:{'
@@ -21,7 +27,8 @@ function signUpAjax(){
     +'email: "'+email+'", password: "'+password+'" }){result, message}}';
 
     // 이메일 유효성 검사 함수 실행
-    if(checkEmail() === false || email === null || email === ""){
+    console.log("chk_email : "+emailOk);
+    if(!emailOk || email === null || email === ""){
         alert("이메일을 다시 확인해주세요.");
         $("#email").focus();
         return;
@@ -35,18 +42,24 @@ function signUpAjax(){
     }
 
   // 닉네임 중복체크 함수 실행
-    if(duplicateNicknameCheck === false|| nickname === null || nickname === ""){
+    if(!nicknameOk || nickname === null || nickname === ""){
         alert("닉네임을 다시 확인해주세요.");
         $("#nickname").focus();
         return;
     } else if (nickname.search(/\s/) != -1) {
         alert("닉네임에 빈칸은 사용할 수 없습니다.");
-        $("nickname").focus();
+        $("#nickname").focus();
         return;
     }
 
+    // 생년월일 유효성검사 실행
+    if(birthCheck() === false || birth === "" || birth === null) {
+        alert("생년월일을 확인해주세요.");
+        $("#birth").focus();
+        return;
+    }
 
-
+    // graphql 쿼리 질의하기
   $.post({
     url: "http://localhost:8080/graphql",
     contentType:"application/json",
@@ -108,12 +121,14 @@ function duplicateEmailCheck(email){
                 // OK 이미지 추가
 
                 console.log("사용가능한 이메일입니다.");
-                return true;
+                emailOk = true;
+                return;
             } else {
                 // 사용불가 이미지 추가
 
                 console.log("이미 존재하는 이메일입니다.");
-                return false;
+                emailOk = false;
+                return;
             }
          });
 }
@@ -126,35 +141,51 @@ function duplicateNicknameCheck(){
 
     if(!exptext.test(nickname)){
         $("#nicknameinfo").html("<br><p style='font-size: 6pt;'>2~10자를 입력해주세요.(특수문자는 사용할 수 없습니다.)</p>");
-        console.log("숫자영문한글만 가능");
+
         return false;
     } else {
         $("#nicknameinfo").html("");
     }
 
     $.post({
-            url: "http://localhost:8080/graphql",
-            contentType:"application/json",
-            data: JSON.stringify({
-                query: nicknameCheck
-             })
-             }).done(function(response){
-                // 중복된 아이디가 있으면 false를 반환
-                console.log(response);
-                console.log(response.data.isValidNickname);
-                if(response.data.isValidNickname){
-                    // OK 이미지 추가
+        url: "http://localhost:8080/graphql",
+        contentType:"application/json",
+        data: JSON.stringify({
+            query: nicknameCheck
+         })
+         }).done(function(response){
+            // 중복된 아이디가 있으면 false를 반환
+            console.log(response);
+            console.log(response.data.isValidNickname);
+            if(response.data.isValidNickname){
+                // OK 이미지 추가
 
-                    console.log("사용가능한 닉네임입니다.");
-                    return true;
-                } else {
-                    // 사용불가 이미지 추가
+                console.log("사용가능한 닉네임입니다.");
+                nicknameOk = true;
+                return;
+            } else {
+                // 사용불가 이미지 추가
 
-                    console.log("이미 존재하는 닉네임입니다.");
-                    return false;
-                }
-             });
+                console.log("이미 존재하는 닉네임입니다.");
+                nicknameOk = false;
+                return;
+            }
+         });
 }
+
+// 생년월일 유효성 검사
+function birthCheck(){
+    var birth = $("#birth").val();
+    var exptext = /^[0-9]+$/;
+    if(!exptext.test(birth) || birth.length !== 8){
+        $("#birthinfo").html("<br><p style='font-size: 6pt;'>생년월일 숫자 8자를 입력해주세요.</p>");
+        return false;
+    } else {
+        $("#birthinfo").html("");
+        return true;
+    }
+}
+
 
 
 

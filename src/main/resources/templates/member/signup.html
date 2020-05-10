@@ -34,19 +34,22 @@
     <tr>
         <th>이름</th>
         <td>
-            <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10" /></sapn>
+            <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10"/></sapn>
         </td>
     </tr>
     <tr>
         <th>생년월일</th>
         <td>
-            <sapn class="ps_box"><input type="text" name="birth" id="birth" /></sapn>
+            <sapn class="ps_box"><input type="text" name="birth" id="birth" placeholder=" ex)19910510" maxlength="8" onchange="birthCheck();"/></sapn>
+            <span id="birthinfo"></span>
         </td>
     </tr>
     <tr>
         <th>휴대폰번호</th>
         <td>
-            <span class="ps_box"><input type="text" name="hp" id="hp" /></span>
+            <span class="ps_box">
+                <input type="text" name="hp1" id="hp1" maxlength="3"/>-<input type="text" name="hp2" id="hp2" maxlength="4"/>-<input type="text" name="hp3" id="hp3" maxlength="4"/>
+            </span>
         </td>
     </tr>
     <tr>
