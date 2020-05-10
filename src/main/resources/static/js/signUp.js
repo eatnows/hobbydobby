@@ -1,6 +1,6 @@
 var emailOk;
 var nicknameOk;
-var host = location.host;
+var host = location.protocol+"//"+location.host;
 var pwdCheck;
 $(function(){
     // 자기소개 글자수 카운팅
@@ -85,7 +85,7 @@ function signUpAjax(){
     // graphql 쿼리 질의하기
 
   $.post({
-    url: "http://"+host+"/graphql",
+    url: host+"/graphql",
     contentType:"application/json",
     data: JSON.stringify({
         query: queryA
@@ -133,7 +133,7 @@ function checkEmail(){
 function duplicateEmailCheck(email){
     var emailCheck = 'query{isValidEmail(email:"'+email+'")}';
     $.post({
-        url: "http://"+host+"/graphql",
+        url: host+"/graphql",
         contentType:"application/json",
         data: JSON.stringify({
             query: emailCheck
@@ -169,7 +169,7 @@ function duplicateNicknameCheck(){
     }
 
     $.post({
-        url: "http://"+host+"/graphql",
+        url: host+"/graphql",
         contentType:"application/json",
         data: JSON.stringify({
             query: nicknameCheck
