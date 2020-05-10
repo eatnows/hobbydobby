@@ -41,7 +41,7 @@ class MemberApiController(
      * 닉네임 중복체크 true일 경우 사용가능
      */
     @GraphQLQuery(name = "isValidNickname", description = "닉네임 중복체크")
-    fun isValidNickname(nickname : String) = if(nickname.length < 4 || nickname.length > 20) {
+    fun isValidNickname(nickname : String) = if(nickname.length < 2 || nickname.length > 10) {
         false
     } else {
         memberService.isValidNickname(nickname)

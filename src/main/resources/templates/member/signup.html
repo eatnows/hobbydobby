@@ -13,7 +13,7 @@
     <tr>
         <th>이메일</th>
         <td>
-            <sapn class="ps_box"><input type="email" name="email" id="email" onchange="checkEmail();" /></sapn>
+            <sapn class="ps_box"><input type="email" name="email" id="email" onchange="checkEmail();"/></sapn>
             <span id="emailinfo"></span>
         </td>
     </tr>
@@ -27,13 +27,14 @@
     <tr>
         <th>닉네임</th>
         <td>
-            <span class="ps_box"><input type="text" name="nickname" id="nickname" onchange="duplicateNicknameCheck();"/></span>
+            <span class="ps_box"><input type="text" name="nickname" id="nickname" onchange="duplicateNicknameCheck();" maxlength="10"/></span>
+            <span id="nicknameinfo"></span>
         </td>
     </tr>
     <tr>
         <th>이름</th>
         <td>
-            <sapn class="ps_box"><input type="text" name="name" id="name" /></sapn>
+            <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10" /></sapn>
         </td>
     </tr>
     <tr>
@@ -57,7 +58,8 @@
     <tr>
         <th>자기소개</th>
         <td>
-            <span class="ps_box"><textarea name="introduce" id="introduce"></textarea></span>
+            <span class="ps_box"><textarea name="introduce" id="introduce" maxlength="100"></textarea></span>
+            <span id="introCount">0/100</span>
         </td>
     </tr>
     <tr>

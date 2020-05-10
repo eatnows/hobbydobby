@@ -1,43 +1,50 @@
-
 $(function(){
-    $("#email").keyup(function(e){
-        var email = $(this).val();
-
-        console.log(email);
+    // 자기소개 글자수 카운팅
+    $("#introduce").keyup(function(){
+        var count = $(this).val().length;
+        $("#introCount").html(count+"/100");
     });
 });
 
-
-
-
-
 // signUp폼에서 넘어온 값을 ajax를 이용해서 graphql 쿼리 질의하기
 function signUpAjax(){
-   var email = $("#email").val();
-   var password = $("#password").val();
-   var nickname = $("#nickname").val();
-   var name = $("#name").val();
-   var birthday = $("#birth").val();
-   var phone = $("#hp").val();
-   var address = $("#address").val();
-   var introduce = $("#introduce").val();
-   var queryA = 'mutation{signUpMember(request:{'
-   +'introduce: "'+introduce+'", address: "'+address+'", birthday: "'+birthday+'", name: "'+name+'", phone: "'+phone+'", nickname: "'+nickname+'",'
-   +'email: "'+email+'", password: "'+password+'" }){result, message}}';
+    var email = $("#email").val();
+    var password = $("#password").val();
+    var nickname = $("#nickname").val();
+    var name = $("#name").val();
+    var birthday = $("#birth").val();
+    var phone = $("#hp").val();
+    var address = $("#address").val();
+    var introduce = $("#introduce").val();
+    var queryA = 'mutation{signUpMember(request:{'
+    +'introduce: "'+introduce+'", address: "'+address+'", birthday: "'+birthday+'", name: "'+name+'", phone: "'+phone+'", nickname: "'+nickname+'",'
+    +'email: "'+email+'", password: "'+password+'" }){result, message}}';
 
-  // 이메일 유효성 검사 함수 실행
-  if(!checkEmail()){
-    alert("이메일을 다시 확인해주세요.");
-    $("#email").focus();
-    return;
-  }
+    // 이메일 유효성 검사 함수 실행
+    if(checkEmail() === false || email === null || email === ""){
+        alert("이메일을 다시 확인해주세요.");
+        $("#email").focus();
+        return;
+    }
 
-  // 비밀번호 유효성 검사 함수 실행
-  if(!checkPassword()){
-    alert("비밀번호 형식이 맞지 않습니다.");
-    $("#password").focus();
-    return;
-  }
+    // 비밀번호 유효성 검사 함수 실행
+    if(!checkPassword() || password === null || password === ""){
+        alert("비밀번호를 다시 확인해주세요.");
+        $("#password").focus();
+        return;
+    }
+
+  // 닉네임 중복체크 함수 실행
+    if(duplicateNicknameCheck === false|| nickname === null || nickname === ""){
+        alert("닉네임을 다시 확인해주세요.");
+        $("#nickname").focus();
+        return;
+    } else if (nickname.search(/\s/) != -1) {
+        alert("닉네임에 빈칸은 사용할 수 없습니다.");
+        $("nickname").focus();
+        return;
+    }
+
 
 
   $.post({
@@ -47,9 +54,6 @@ function signUpAjax(){
         query: queryA
      })
      }).done(function(response){
-/*        console.log(response);
-        console.log(response.data.signUpMember.message);
-        console.log(response.data.signUpMember.result);*/
         var result = response.data.signUpMember.result;
         if(result === "success"){
             alert("회원가입되었습니다.");
@@ -98,9 +102,9 @@ function duplicateEmailCheck(email){
             query: emailCheck
          })
          }).done(function(response){
-            // 중복된 아이디가 있으면 true를 반환
+            // 중복된 아이디가 있으면 false 반환
             //console.log(response.data.isValidEmail);
-            if(!response.data.isValidEmail){
+            if(response.data.isValidEmail){
                 // OK 이미지 추가
 
                 console.log("사용가능한 이메일입니다.");
@@ -118,6 +122,16 @@ function duplicateEmailCheck(email){
 function duplicateNicknameCheck(){
     var nickname = $("#nickname").val();
     var nicknameCheck = 'query{isValidNickname(nickname:"'+nickname+'")}';
+    var exptext = /^[A-Za-z0-9가-힣]+$/;
+
+    if(!exptext.test(nickname)){
+        $("#nicknameinfo").html("<br><p style='font-size: 6pt;'>2~10자를 입력해주세요.(특수문자는 사용할 수 없습니다.)</p>");
+        console.log("숫자영문한글만 가능");
+        return false;
+    } else {
+        $("#nicknameinfo").html("");
+    }
+
     $.post({
             url: "http://localhost:8080/graphql",
             contentType:"application/json",
@@ -125,7 +139,7 @@ function duplicateNicknameCheck(){
                 query: nicknameCheck
              })
              }).done(function(response){
-                // 중복된 아이디가 있으면 true를 반환
+                // 중복된 아이디가 있으면 false를 반환
                 console.log(response);
                 console.log(response.data.isValidNickname);
                 if(response.data.isValidNickname){
@@ -141,6 +155,8 @@ function duplicateNicknameCheck(){
                 }
              });
 }
+
+
 
 
 
