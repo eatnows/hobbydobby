@@ -1,6 +1,7 @@
 var emailOk;
 var nicknameOk;
-
+var host = location.host;
+var pwdCheck;
 $(function(){
     // 자기소개 글자수 카운팅
     $("#introduce").keyup(function(){
@@ -8,18 +9,34 @@ $(function(){
         $("#introCount").html(count+"/100");
     });
 
+
+    // 비밀번호 확인과 비밀번호 같은 값인지 검사
+    $("#password2").keyup(function(){
+        var password = $("#password").val();
+        var password2 = $(this).val();
+        if(password !== password2){
+            // X자 이미지 추가
+
+            $("#pwdinfo2").html("<br><p style='font-size: 6pt;'>비밀번호가 맞지 않습니다.</p>");
+            pwdCheck = false;
+        } else {
+            // OK 이미지 추가
+
+            $("#pwdinfo2").html("");
+            pwdCheck = true;
+        }
+    });
 });
 
 // signUp폼에서 넘어온 값을 ajax를 이용해서 graphql 쿼리 질의하기
 function signUpAjax(){
     var email = $("#email").val();
     var password = $("#password").val();
+    var password2 = $("#password2").val();
     var nickname = $("#nickname").val();
     var name = $("#name").val();
     var birthday = $("#birth").val();
     var phone = $("#hp1").val()+$("#hp2").val()+$("#hp3").val();
-
-
     var address = $("#address").val();
     var introduce = $("#introduce").val();
     var queryA = 'mutation{signUpMember(request:{'
@@ -27,7 +44,6 @@ function signUpAjax(){
     +'email: "'+email+'", password: "'+password+'" }){result, message}}';
 
     // 이메일 유효성 검사 함수 실행
-    console.log("chk_email : "+emailOk);
     if(!emailOk || email === null || email === ""){
         alert("이메일을 다시 확인해주세요.");
         $("#email").focus();
@@ -38,6 +54,13 @@ function signUpAjax(){
     if(!checkPassword() || password === null || password === ""){
         alert("비밀번호를 다시 확인해주세요.");
         $("#password").focus();
+        return;
+    }
+
+    // 비빌번호 확인 값 비교
+    if(!pwdCheck){
+        alert("비밀번호가 틀립니다.");
+        $("#password2").focus();
         return;
     }
 
@@ -60,8 +83,9 @@ function signUpAjax(){
     }
 
     // graphql 쿼리 질의하기
+
   $.post({
-    url: "http://localhost:8080/graphql",
+    url: "http://"+host+"/graphql",
     contentType:"application/json",
     data: JSON.stringify({
         query: queryA
@@ -82,13 +106,13 @@ function checkPassword(){
     var password = $("#password").val();
     if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password)){
         $("#pwdinfo").html("<br><p style='font-size: 6pt;'>숫자+영문+특수문자 조합으로 8자리 이상 사용해야 합니다.</p>");
-        //console.log("숫자+영문+특수문자 조합으로 8자리 이상 사용해야 합니다.")
         return false;
     } else {
         $("#pwdinfo").html("");
         return true;
     }
 }
+
 
 // 이메일 유효성 검사와 중복체크
 function checkEmail(){
@@ -109,31 +133,28 @@ function checkEmail(){
 function duplicateEmailCheck(email){
     var emailCheck = 'query{isValidEmail(email:"'+email+'")}';
     $.post({
-        url: "http://localhost:8080/graphql",
+        url: "http://"+host+"/graphql",
         contentType:"application/json",
         data: JSON.stringify({
             query: emailCheck
          })
          }).done(function(response){
             // 중복된 아이디가 있으면 false 반환
-            //console.log(response.data.isValidEmail);
             if(response.data.isValidEmail){
                 // OK 이미지 추가
 
-                console.log("사용가능한 이메일입니다.");
                 emailOk = true;
                 return;
             } else {
                 // 사용불가 이미지 추가
 
-                console.log("이미 존재하는 이메일입니다.");
                 emailOk = false;
                 return;
             }
          });
 }
 
-// 닉네임 중복체크 함수
+// 닉네임 중복체크와 유효성 검사 함수
 function duplicateNicknameCheck(){
     var nickname = $("#nickname").val();
     var nicknameCheck = 'query{isValidNickname(nickname:"'+nickname+'")}';
@@ -148,25 +169,21 @@ function duplicateNicknameCheck(){
     }
 
     $.post({
-        url: "http://localhost:8080/graphql",
+        url: "http://"+host+"/graphql",
         contentType:"application/json",
         data: JSON.stringify({
             query: nicknameCheck
          })
          }).done(function(response){
             // 중복된 아이디가 있으면 false를 반환
-            console.log(response);
-            console.log(response.data.isValidNickname);
             if(response.data.isValidNickname){
                 // OK 이미지 추가
 
-                console.log("사용가능한 닉네임입니다.");
                 nicknameOk = true;
                 return;
             } else {
                 // 사용불가 이미지 추가
 
-                console.log("이미 존재하는 닉네임입니다.");
                 nicknameOk = false;
                 return;
             }
@@ -185,6 +202,8 @@ function birthCheck(){
         return true;
     }
 }
+
+
 
 
 

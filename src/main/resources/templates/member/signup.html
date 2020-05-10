@@ -1,74 +1,82 @@
 <!DOCTYPE html>
-<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <script th:src="@{/js/signUp.js}"></script>
 </head>
 <body>
 <form action="#" method="post">
-<table>
-    <caption>회원가입</caption>
+<table class="table table-bordered" style="width: 500px;">
+    <caption style="text-align: center;"><b>회원가입</b></caption>
     <tr>
-        <th>이메일</th>
+        <th style="width: 130px;">이메일</th>
         <td>
             <sapn class="ps_box"><input type="email" name="email" id="email" onchange="checkEmail();"/></sapn>
-            <span id="emailinfo"></span>
+            <br><span id="emailinfo"></span>
         </td>
     </tr>
     <tr>
-        <th>비밀번호</th>
+        <th style="width: 130px;">비밀번호</th>
         <td>
             <sapn class="ps_box"><input type="password" name="password" id="password" onchange="checkPassword();"/></sapn>
-            <span id="pwdinfo"></span>
+            <br><span id="pwdinfo"></span>
         </td>
     </tr>
     <tr>
-        <th>닉네임</th>
+        <th style="width: 130px;">비밀번호 확인</th>
+        <td>
+            <sapn class="ps_box"><input type="password" name="password2" id="password2" onchange="checkPassword();"/></sapn>
+            <br><span id="pwdinfo2"></span>
+        </td>
+    </tr>
+    <tr>
+        <th style="width: 130px;">닉네임</th>
         <td>
             <span class="ps_box"><input type="text" name="nickname" id="nickname" onchange="duplicateNicknameCheck();" maxlength="10"/></span>
-            <span id="nicknameinfo"></span>
+            <br><span id="nicknameinfo"></span>
         </td>
     </tr>
     <tr>
-        <th>이름</th>
+        <th style="width: 130px;">이름</th>
         <td>
             <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10"/></sapn>
         </td>
     </tr>
     <tr>
-        <th>생년월일</th>
+        <th style="width: 130px;">생년월일</th>
         <td>
             <sapn class="ps_box"><input type="text" name="birth" id="birth" placeholder=" ex)19910510" maxlength="8" onchange="birthCheck();"/></sapn>
-            <span id="birthinfo"></span>
+            <br><span id="birthinfo"></span>
         </td>
     </tr>
     <tr>
-        <th>휴대폰번호</th>
+        <th style="width: 130px;">휴대폰번호</th>
         <td>
             <span class="ps_box">
-                <input type="text" name="hp1" id="hp1" maxlength="3"/>-<input type="text" name="hp2" id="hp2" maxlength="4"/>-<input type="text" name="hp3" id="hp3" maxlength="4"/>
+                <input type="text" name="hp1" id="hp1" maxlength="3" style="width: 50px;"/>-<input type="text" name="hp2" id="hp2" maxlength="4" style="width: 50px;"/>-<input type="text" name="hp3" id="hp3" maxlength="4" style="width: 50px;"/>
             </span>
         </td>
     </tr>
     <tr>
-        <th>주소</th>
+        <th style="width: 130px;">주소</th>
         <td>
             <span class="ps_box"><input type="text" name="address" id="address" /></span>
         </td>
     </tr>
     <tr>
-        <th>자기소개</th>
+        <th style="width: 130px;">자기소개</th>
         <td>
-            <span class="ps_box"><textarea name="introduce" id="introduce" maxlength="100"></textarea></span>
-            <span id="introCount">0/100</span>
+            <span class="ps_box"><textarea name="introduce" id="introduce" maxlength="100" style="width:370px; height: 200px;"></textarea></span>
+            <br><span id="introCount" style="float: right;">0/100</span>
         </td>
     </tr>
     <tr>
-        <td colspan="2">
-            <button type="button" onclick="signUpAjax();">확인</button>
-            <button type="reset" onclick="history.back();">취소</button>
+        <td colspan="2" style="text-align: center;">
+            <button type="button" onclick="signUpAjax();" class="btn btn-sm btn-success">확인</button>
+            <button type="reset" onclick="history.back();" class="btn btn-sm btn-info">취소</button>
         </td>
     </tr>
 </table>

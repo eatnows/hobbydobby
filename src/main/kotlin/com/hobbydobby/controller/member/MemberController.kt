@@ -2,14 +2,13 @@ package com.hobbydobby.controller.member
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
+@RequestMapping("/member")
 class MemberController {
-    @GetMapping("/member/signup")
+    @GetMapping("/signup")
     fun signUpPage(): String {
         return "member/signup"
     }
-
-    // 이메일 중복체크
-
 }
