@@ -1,7 +1,7 @@
 package com.hobbydobby.controller.member
 
-import com.hobbydobby.domain.member.MemberSingUpRequest
-import com.hobbydobby.domain.member.MemberSingUpResponse
+import com.hobbydobby.domain.member.MemberSignUpRequest
+import com.hobbydobby.domain.member.MemberSignUpResponse
 import com.hobbydobby.service.member.MemberService
 import com.hobbydobby.util.StringUtil
 import io.leangen.graphql.annotations.GraphQLMutation
@@ -21,10 +21,10 @@ class MemberApiController(
     /**
      * 기초적인 회원가입 api
      */
-    @GraphQLMutation(name = "singUpMember", description = "회원가입시 사용")
-    fun singUp(request : MemberSingUpRequest): MemberSingUpResponse {
+    @GraphQLMutation(name = "signUpMember", description = "회원가입시 사용")
+    fun singUp(request : MemberSignUpRequest): MemberSignUpResponse {
         val result = memberService.signUp(request.toEntity())
-        return MemberSingUpResponse(result = result["result"]?:"fail", message = result["message"]?:"")
+        return MemberSignUpResponse(result = result["result"]?:"fail", message = result["message"]?:"")
     }
 
     /**
@@ -41,7 +41,7 @@ class MemberApiController(
      * 닉네임 중복체크 true일 경우 사용가능
      */
     @GraphQLQuery(name = "isValidNickname", description = "닉네임 중복체크")
-    fun isValidNickname(nickname : String) = if(nickname.length < 4 || nickname.length > 20) {
+    fun isValidNickname(nickname : String) = if(nickname.length < 2 || nickname.length > 10) {
         false
     } else {
         memberService.isValidNickname(nickname)

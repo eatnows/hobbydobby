@@ -3,7 +3,7 @@ package com.hobbydobby.domain.member
 /**
  * 회원가입에 대한 Request
  */
-class MemberSingUpRequest(
+class MemberSignUpRequest(
         var email : String  = "",
         var password : String = "",
         var name : String = "",
