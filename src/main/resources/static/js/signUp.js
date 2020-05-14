@@ -14,16 +14,16 @@ $(function(){
     $("#password2").keyup(function(){
         var password = $("#password").val();
         var password2 = $(this).val();
-        if(password !== password2){
-            // X자 이미지 추가
-
-            $("#pwdinfo2").html("<br><p style='font-size: 6pt;'>비밀번호가 맞지 않습니다.</p>");
-            pwdCheck = false;
-        } else {
+        if(password === password2 || password2 === ""){
             // OK 이미지 추가
 
             $("#pwdinfo2").html("");
-            pwdCheck = true;
+            pwdCheck = password === password2;
+        } else {
+            // X자 이미지 추가
+
+            $("#pwdinfo2").html("<br><p style='font-size: 6pt; color: red;'>비밀번호가 맞지 않습니다.</p>");
+            pwdCheck = false;
         }
     });
 });
@@ -32,7 +32,6 @@ $(function(){
 function signUpAjax(){
     var email = $("#email").val();
     var password = $("#password").val();
-    var password2 = $("#password2").val();
     var nickname = $("#nickname").val();
     var name = $("#name").val();
     var birthday = $("#birth").val();
@@ -44,14 +43,14 @@ function signUpAjax(){
     +'email: "'+email+'", password: "'+password+'" }){result, message}}';
 
     // 이메일 유효성 검사 함수 실행
-    if(!emailOk || email === null || email === ""){
+    if(!emailOk){
         alert("이메일을 다시 확인해주세요.");
         $("#email").focus();
         return;
     }
 
     // 비밀번호 유효성 검사 함수 실행
-    if(!checkPassword() || password === null || password === ""){
+    if(!checkPassword()){
         alert("비밀번호를 다시 확인해주세요.");
         $("#password").focus();
         return;
@@ -65,25 +64,32 @@ function signUpAjax(){
     }
 
   // 닉네임 중복체크 함수 실행
-    if(!nicknameOk || nickname === null || nickname === ""){
+    if(!nicknameOk){
         alert("닉네임을 다시 확인해주세요.");
         $("#nickname").focus();
         return;
-    } else if (nickname.search(/\s/) != -1) {
+    } else if (nickname.search(/\s/) !== -1) {
         alert("닉네임에 빈칸은 사용할 수 없습니다.");
         $("#nickname").focus();
         return;
     }
 
+    // 이름 유효성검사 실행
+    if(!nameCheck()) {
+        alert("이름을 확인해주세요.");
+        $("#name").focus();
+        return;
+    }
+
     // 생년월일 유효성검사 실행
-    if(birthCheck() === false || birth === "" || birth === null) {
+    if(!birthCheck()) {
         alert("생년월일을 확인해주세요.");
         $("#birth").focus();
         return;
     }
 
-    // graphql 쿼리 질의하기
 
+  // graphql 쿼리 질의하기
   $.post({
     url: host+"/graphql",
     contentType:"application/json",
@@ -104,33 +110,37 @@ function signUpAjax(){
 // 비밀번호 유효성 검사
 function checkPassword(){
     var password = $("#password").val();
-    if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password)){
-        $("#pwdinfo").html("<br><p style='font-size: 6pt;'>숫자+영문+특수문자 조합으로 8자리 이상 사용해야 합니다.</p>");
-        return false;
-    } else {
+    if(password === "" || password === null){
         $("#pwdinfo").html("");
-        return true;
+        return false;
+        // 세가지 패턴을 가지는 8~25자 문자
+    } else if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password)){
+        $("#pwdinfo").html("<br><p style='font-size: 6pt; color: red;'>숫자+영문+특수문자 조합으로 8자리 이상 사용해야 합니다.</p>");
+        return false;
     }
+    $("#pwdinfo").html("");
+    return true;
 }
 
 
 // 이메일 유효성 검사와 중복체크
 function checkEmail(){
     var email = $("#email").val();
+    // (영문과숫자_.-)@(영문과 숫자).(영문과숫자)
     var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
-    if(!exptext.test(email)){
-        $("#emailinfo").html("<br><p style='font-size: 6pt;'>이메일 형식이 맞지 않습니다.</p>");
-        // 사용불가 이미지 추가
-
-        return false;
-    } else {
+    if(email === ""){
         $("#emailinfo").html("");
-        duplicateEmailCheck(email);
+        return false;
+    } else if(!exptext.test(email)){
+        $("#emailinfo").html("<br><p style='font-size: 6pt; color: red;'>이메일 형식이 맞지 않습니다.</p>");
+        // 사용불가 이미지 추가
+        return false;
     }
+    checkEmailValidation(email);
 }
 
 // 이메일 중복체크 함수
-function duplicateEmailCheck(email){
+function checkEmailValidation(email){
     var emailCheck = 'query{isValidEmail(email:"'+email+'")}';
     $.post({
         url: host+"/graphql",
@@ -142,14 +152,16 @@ function duplicateEmailCheck(email){
             // 중복된 아이디가 있으면 false 반환
             if(response.data.isValidEmail){
                 // OK 이미지 추가
-
+                // 임시 문구 대체
+                $("#emailinfo").html("<br><p style='font-size: 6pt; color: green;'>사용가능한 이메일입니다.</p>");
                 emailOk = true;
-                return;
+            } else if( email === "") {
+                emailOk = false;
             } else {
                 // 사용불가 이미지 추가
-
+                // 임시 문구로 대체
+                $("#emailinfo").html("<br><p style='font-size: 6pt; color: red;'>중복된 이메일입니다.</p>");
                 emailOk = false;
-                return;
             }
          });
 }
@@ -158,14 +170,15 @@ function duplicateEmailCheck(email){
 function duplicateNicknameCheck(){
     var nickname = $("#nickname").val();
     var nicknameCheck = 'query{isValidNickname(nickname:"'+nickname+'")}';
-    var exptext = /^[A-Za-z0-9가-힣]+$/;
+    // 영문,숫자,한글로 구성된 2~10 글자
+    var exptext = /^[A-Za-z0-9가-힣]{2,10}$/;
 
-    if(!exptext.test(nickname)){
-        $("#nicknameinfo").html("<br><p style='font-size: 6pt;'>2~10자를 입력해주세요.(특수문자는 사용할 수 없습니다.)</p>");
-
-        return false;
-    } else {
+    if(nickname === "" || nickname === null){
         $("#nicknameinfo").html("");
+        return false;
+    } else if(!exptext.test(nickname)){
+        $("#nicknameinfo").html("<br><p style='font-size: 6pt; color: red;'>2~10자를 입력해주세요.(특수문자는 사용할 수 없습니다.)</p>");
+        return false;
     }
 
     $.post({
@@ -178,14 +191,14 @@ function duplicateNicknameCheck(){
             // 중복된 아이디가 있으면 false를 반환
             if(response.data.isValidNickname){
                 // OK 이미지 추가
-
+                // 임시 문구 대체
+                $("#nicknameinfo").html("<br><p style='font-size: 6pt; color: green;'>사용할 수 있는 닉네임입니다.</p>");
                 nicknameOk = true;
-                return;
             } else {
                 // 사용불가 이미지 추가
-
+                // 임시 문구 대체
+                $("#nicknameinfo").html("<br><p style='font-size: 6pt; color: red;'>중복된 닉네임입니다.</p>");
                 nicknameOk = false;
-                return;
             }
          });
 }
@@ -193,12 +206,33 @@ function duplicateNicknameCheck(){
 // 생년월일 유효성 검사
 function birthCheck(){
     var birth = $("#birth").val();
-    var exptext = /^[0-9]+$/;
-    if(!exptext.test(birth) || birth.length !== 8){
-        $("#birthinfo").html("<br><p style='font-size: 6pt;'>생년월일 숫자 8자를 입력해주세요.</p>");
+    // 숫자로 구성된 8자리 문자
+    var exptext = /^[0-9]{8}$/;
+    if(birth === "" || birth === null){
+        $("#birthinfo").html("");
+        return false;
+    } else if(!exptext.test(birth)){
+        $("#birthinfo").html("<br><p style='font-size: 6pt; color: red;'>생년월일 숫자 8자를 입력해주세요.</p>");
+        return false;
+    }
+    $("#birthinfo").html("");
+    return true;
+}
+
+// 이름 유효성 검사
+function nameCheck(){
+    var name = $("#name").val();
+    // 영문자와 한글로 구성된 2글자 이상
+    var exptext = /[A-Za-z가-힣]{2,}$/;
+
+    if(name === "" || name === null ){
+        $("#nameinfo").html("");
+        return false;
+    } else if(!exptext.test(name)){
+        $("#nameinfo").html("<br><p style='font-size: 6pt; color: red;'>영문과 한글로 구성된 2글자 이상만 가능합니다.</p>");
         return false;
     } else {
-        $("#birthinfo").html("");
+        $("#nameinfo").html("");
         return true;
     }
 }

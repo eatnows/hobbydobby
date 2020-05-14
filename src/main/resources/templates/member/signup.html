@@ -12,14 +12,14 @@
 <table class="table table-bordered" style="width: 500px;">
     <caption style="text-align: center;"><b>회원가입</b></caption>
     <tr>
-        <th style="width: 130px;">이메일</th>
+        <th style="width: 130px;">이메일 <span style="color: red;">*</span></th>
         <td>
             <sapn class="ps_box"><input type="email" name="email" id="email" onchange="checkEmail();"/></sapn>
             <br><span id="emailinfo"></span>
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">비밀번호</th>
+        <th style="width: 130px;">비밀번호 <span style="color: red;">*</span></th>
         <td>
             <sapn class="ps_box"><input type="password" name="password" id="password" onchange="checkPassword();"/></sapn>
             <br><span id="pwdinfo"></span>
@@ -28,32 +28,33 @@
     <tr>
         <th style="width: 130px;">비밀번호 확인</th>
         <td>
-            <sapn class="ps_box"><input type="password" name="password2" id="password2" onchange="checkPassword();"/></sapn>
+            <sapn class="ps_box"><input type="password" name="password2" id="password2" /></sapn>
             <br><span id="pwdinfo2"></span>
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">닉네임</th>
+        <th style="width: 130px;">닉네임 <span style="color: red;">*</span></th>
         <td>
             <span class="ps_box"><input type="text" name="nickname" id="nickname" onchange="duplicateNicknameCheck();" maxlength="10"/></span>
             <br><span id="nicknameinfo"></span>
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">이름</th>
+        <th style="width: 130px;">이름 <span style="color: red;">*</span></th>
         <td>
-            <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10"/></sapn>
+            <sapn class="ps_box"><input type="text" name="name" id="name" maxlength="10" onchange="nameCheck();"/></sapn>
+            <br><span id="nameinfo"></span>
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">생년월일</th>
+        <th style="width: 130px;">생년월일 <span style="color: red;">*</span></th>
         <td>
             <sapn class="ps_box"><input type="text" name="birth" id="birth" placeholder=" ex)19910510" maxlength="8" onchange="birthCheck();"/></sapn>
             <br><span id="birthinfo"></span>
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">휴대폰번호</th>
+        <th style="width: 130px;">휴대폰번호 <span style="color: red;">*</span></th>
         <td>
             <span class="ps_box">
                 <input type="text" name="hp1" id="hp1" maxlength="3" style="width: 50px;"/>-<input type="text" name="hp2" id="hp2" maxlength="4" style="width: 50px;"/>-<input type="text" name="hp3" id="hp3" maxlength="4" style="width: 50px;"/>
@@ -61,7 +62,7 @@
         </td>
     </tr>
     <tr>
-        <th style="width: 130px;">주소</th>
+        <th style="width: 130px;">주소 <span style="color: red;">*</span></th>
         <td>
             <span class="ps_box"><input type="text" name="address" id="address" /></span>
         </td>
@@ -70,7 +71,8 @@
         <th style="width: 130px;">자기소개</th>
         <td>
             <span class="ps_box"><textarea name="introduce" id="introduce" maxlength="100" style="width:370px; height: 200px;"></textarea></span>
-            <br><span id="introCount" style="float: right;">0/100</span>
+            <br><span style="float: left; color: red;">*는 필수 기입 항목입니다.</span>
+            <span id="introCount" style="float: right;">0/100</span>
         </td>
     </tr>
     <tr>
