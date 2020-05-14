@@ -1,10 +1,12 @@
 package com.hobbydobby.controller.hobby
 
 import com.hobbydobby.domain.ResponseCode
+import com.hobbydobby.domain.hobby.GetHobbyListByNameResponse
 import com.hobbydobby.domain.hobby.Hobby
 import com.hobbydobby.domain.hobby.RegisterNewHobbyResponse
 import com.hobbydobby.service.hobby.HobbyService
 import io.leangen.graphql.annotations.GraphQLMutation
+import io.leangen.graphql.annotations.GraphQLQuery
 import io.leangen.graphql.spqr.spring.annotations.GraphQLApi
 import org.springframework.stereotype.Controller
 
@@ -24,5 +26,10 @@ class HobbyApiController(
                 message = (resultMap["message"] as String?)?:"",
                 id = (resultMap["id"] as String?)?.toIntOrNull(),
                 code = (resultMap["code"] as ResponseCode).code)
+    }
+
+    @GraphQLQuery(name = "getHobbyListByName", description = "관심사 명으로 전체 관심사 리스트 가져오기 LIKE '이름%' 형식")
+    fun getHobbyListByName(hobbyName: String): GetHobbyListByNameResponse {
+        return hobbyService.getHobbyListByName(name = "$hobbyName%")
     }
 }

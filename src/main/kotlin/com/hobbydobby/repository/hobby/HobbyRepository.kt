@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository
  */
 interface HobbyRepository : JpaRepository<Hobby, Int> {
     fun findByNameEquals(name : String) : Hobby?
+    fun findFirst10ByNameLikeOrderByName(name : String) : ArrayList<Hobby>
 }

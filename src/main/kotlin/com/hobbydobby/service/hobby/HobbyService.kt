@@ -1,6 +1,7 @@
 package com.hobbydobby.service.hobby
 
 import com.hobbydobby.domain.ResponseCode
+import com.hobbydobby.domain.hobby.GetHobbyListByNameResponse
 import com.hobbydobby.domain.hobby.Hobby
 import com.hobbydobby.repository.hobby.HobbyRepository
 import org.springframework.stereotype.Service
@@ -36,6 +37,25 @@ class HobbyService(
                 it["message"] = exception.message?:""
                 it["code"] = ResponseCode.HOBBY_EXCEPTION
             }
+        }
+    }
+
+    /**
+     * 관심사명으로 관심사 리스트 가져오기
+     */
+    fun getHobbyListByName(name : String): GetHobbyListByNameResponse {
+        return try {
+            GetHobbyListByNameResponse(
+                    code = ResponseCode.HOBBY_SUCCESS.code,
+                    list = hobbyRepository.findFirst10ByNameLikeOrderByName(name),
+                    result = "success")
+        } catch (exception : Exception) {
+            GetHobbyListByNameResponse(
+                    code = ResponseCode.HOBBY_EXCEPTION.code,
+                    list = ArrayList<Hobby>(),
+                    result = "fail",
+                    message = exception.message?:""
+            )
         }
     }
 }
