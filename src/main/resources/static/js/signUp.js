@@ -136,11 +136,11 @@ function checkEmail(){
         // 사용불가 이미지 추가
         return false;
     }
-    duplicateEmailCheck(email);
+    checkEmailValidation(email);
 }
 
 // 이메일 중복체크 함수
-function duplicateEmailCheck(email){
+function checkEmailValidation(email){
     var emailCheck = 'query{isValidEmail(email:"'+email+'")}';
     $.post({
         url: host+"/graphql",
@@ -155,7 +155,7 @@ function duplicateEmailCheck(email){
                 // 임시 문구 대체
                 $("#emailinfo").html("<br><p style='font-size: 6pt; color: green;'>사용가능한 이메일입니다.</p>");
                 emailOk = true;
-            } else if(email === null || email === "") {
+            } else if( email === "") {
                 emailOk = false;
             } else {
                 // 사용불가 이미지 추가
@@ -197,7 +197,7 @@ function duplicateNicknameCheck(){
             } else {
                 // 사용불가 이미지 추가
                 // 임시 문구 대체
-                $("#nicknameinfo").html("<br><p style='font-size: 6pt; color: red;'>사용할 수 없는 닉네임입니다.</p>");
+                $("#nicknameinfo").html("<br><p style='font-size: 6pt; color: red;'>중복된 닉네임입니다.</p>");
                 nicknameOk = false;
             }
          });
@@ -233,6 +233,7 @@ function nameCheck(){
         return false;
     } else {
         $("#nameinfo").html("");
+        return true;
     }
 }
 
