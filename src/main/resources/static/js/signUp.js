@@ -113,6 +113,7 @@ function checkPassword(){
     if(password === "" || password === null){
         $("#pwdinfo").html("");
         return false;
+        // 세가지 패턴을 가지는 8~25자 문자
     } else if(!/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/.test(password)){
         $("#pwdinfo").html("<br><p style='font-size: 6pt; color: red;'>숫자+영문+특수문자 조합으로 8자리 이상 사용해야 합니다.</p>");
         return false;
@@ -205,11 +206,12 @@ function duplicateNicknameCheck(){
 // 생년월일 유효성 검사
 function birthCheck(){
     var birth = $("#birth").val();
-    var exptext = /^[0-9]+$/;
+    // 숫자로 구성된 8자리 문자
+    var exptext = /^[0-9]{8}$/;
     if(birth === "" || birth === null){
         $("#birthinfo").html("");
         return false;
-    } else if(!exptext.test(birth) || birth.length !== 8){
+    } else if(!exptext.test(birth)){
         $("#birthinfo").html("<br><p style='font-size: 6pt; color: red;'>생년월일 숫자 8자를 입력해주세요.</p>");
         return false;
     }
