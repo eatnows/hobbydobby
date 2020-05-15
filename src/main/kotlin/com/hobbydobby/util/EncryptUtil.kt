@@ -2,10 +2,13 @@ package com.hobbydobby.util
 
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
+import java.security.SecureRandom
+import java.util.*
 import kotlin.experimental.and
 
 object EncryptUtil {
     fun encryptSHA512(target: String): String {
+
         val hashCodeBuffer = StringBuffer()
         try {
             val md = MessageDigest.getInstance("SHA-512")
@@ -19,4 +22,17 @@ object EncryptUtil {
         }
         return hashCodeBuffer.toString()
     }
+
+    fun getSalt(): String {
+        val random = SecureRandom.getInstance("SHA1PRNG")
+        val bytes = byteArrayOf(16)
+        random.nextBytes(bytes)
+        val salt = String(Base64.getEncoder().encode(bytes))
+        return salt
+    }
+
+}
+
+fun main() {
+    EncryptUtil.encryptSHA512("dddd")
 }

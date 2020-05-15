@@ -18,8 +18,10 @@ class MemberService(
      */
     fun signUp(member : Member): HashMap<String, String> {
         try {
+            // salt 메소드
+            val salt = EncryptUtil.getSalt()
             // SHA512 패스워드 암호화
-            member.password = EncryptUtil.encryptSHA512(member.password)
+            member.password = EncryptUtil.encryptSHA512(member.password+salt)
 
             // JpaRepository 로 객체를 insert할때는 save 메소드를 씀
             memberRepository.save(member) 
