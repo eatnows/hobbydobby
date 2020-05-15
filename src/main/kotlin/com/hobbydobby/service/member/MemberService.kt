@@ -18,7 +18,7 @@ class MemberService(
      */
     fun signUp(member : Member): HashMap<String, String> {
         try {
-            // salt 메소드
+            // salt 메소드 호출하여 salt값 반환
             val salt = EncryptUtil.getSalt()
             // SHA512 패스워드 암호화
             member.password = EncryptUtil.encryptSHA512(member.password+salt)
