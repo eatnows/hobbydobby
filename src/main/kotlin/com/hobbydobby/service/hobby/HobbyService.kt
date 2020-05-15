@@ -1,6 +1,7 @@
 package com.hobbydobby.service.hobby
 
 import com.hobbydobby.domain.ResponseCode
+import com.hobbydobby.domain.hobby.ConfirmHobbyBoardResponse
 import com.hobbydobby.domain.hobby.GetHobbyListByNameResponse
 import com.hobbydobby.domain.hobby.Hobby
 import com.hobbydobby.repository.hobby.HobbyRepository
@@ -57,5 +58,21 @@ class HobbyService(
                     message = exception.message?:""
             )
         }
+    }
+
+    /**
+     *  해당 관심사의 게시판을 생성
+     */
+    fun confirmHobbyBoard(hobbyId : Int): ConfirmHobbyBoardResponse {
+        val hobbyResult = hobbyRepository.findById(hobbyId)
+        if(hobbyResult.isPresent) {
+            val hobby = hobbyResult.get()
+            if(hobby.boardOn) {
+                return ConfirmHobbyBoardResponse(code = ResponseCode.HOBBY_BOARD_ALREADY_EXIST.code, result = "fail", message = "Already Exist Board")
+            }
+            hobbyRepository.save(hobby.also { it.boardOn = true })
+            return ConfirmHobbyBoardResponse(code = ResponseCode.HOBBY_SUCCESS.code, result = "success", message = "Create Board Success")
+        }
+        return ConfirmHobbyBoardResponse(code = ResponseCode.HOBBY_INVALID_ID.code, result = "fail", message = "Invalid Id")
     }
 }

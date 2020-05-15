@@ -13,3 +13,9 @@ class GetHobbyListByNameResponse(
     var result : String,
     var message : String = ""
 )
+
+class ConfirmHobbyBoardResponse(
+    var code : String,
+    var result : String,
+    var message : String = ""
+)
