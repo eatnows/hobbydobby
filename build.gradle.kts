@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "com"
-version = "0.0.2-SNAPSHOT"
+version = "0.0.3-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 val developmentOnly by configurations.creating
@@ -58,4 +58,8 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
+
+sourceSets.main {
+    java.srcDirs("src/main/kotlin")
 }
