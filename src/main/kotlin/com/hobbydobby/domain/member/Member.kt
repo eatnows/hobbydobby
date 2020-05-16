@@ -23,6 +23,8 @@ class Member(
         @Column
         var password : String = "",
         @Column
+        var salt : String = "",
+        @Column
         var name : String = "",
         @Column
         var nickname : String = "",
