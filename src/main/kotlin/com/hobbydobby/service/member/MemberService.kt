@@ -22,6 +22,7 @@ class MemberService(
             val salt = EncryptUtil.getSalt()
             // SHA512 패스워드 암호화
             member.password = EncryptUtil.encryptSHA512(member.password+salt)
+            member.salt = salt
 
             // JpaRepository 로 객체를 insert할때는 save 메소드를 씀
             memberRepository.save(member) 
