@@ -37,7 +37,11 @@ class Member(
         @Column
         var introduce : String = "",
         @Column
+        var lockYn : Boolean = false,
+        @Column
         var lockCount : Int = 0,
+        @Column
+        var lockDate : LocalDateTime? = null,
         @Column
         var lastLoginDate : LocalDateTime? = null,
         @Column

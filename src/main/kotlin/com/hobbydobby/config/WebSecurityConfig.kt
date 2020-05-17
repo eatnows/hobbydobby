@@ -1,5 +1,6 @@
 package com.hobbydobby.config
 
+import com.hobbydobby.handler.AuthFailureHandler
 import com.hobbydobby.handler.AuthSuccessHandler
 import com.hobbydobby.handler.HobbyDobbyAuthProvider
 import org.springframework.context.annotation.Configuration
@@ -11,7 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 class WebSecurityConfig(
         var authProvider : HobbyDobbyAuthProvider,
-        var authSuccessHandler: AuthSuccessHandler
+        var authSuccessHandler: AuthSuccessHandler,
+        var authFailureHandler: AuthFailureHandler
 ) : WebSecurityConfigurerAdapter() {
     /**
      * http configure
@@ -26,6 +28,7 @@ class WebSecurityConfig(
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .successHandler(authSuccessHandler)
+                .failureHandler(authFailureHandler)
                 .and()
                 .logout()
                 .deleteCookies("JSESSIONID")

@@ -4,13 +4,17 @@ import com.hobbydobby.domain.Role
 import com.hobbydobby.domain.member.Member
 import com.hobbydobby.service.member.MemberService
 import com.hobbydobby.util.EncryptUtil
-import com.hobbydobby.util.StringUtil
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authentication.LockedException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import javax.servlet.http.HttpServletRequest
@@ -25,14 +29,14 @@ class HobbyDobbyAuthProvider(
             throw Exception("auth fail")
         }
         val email = authentication.principal as String
-        if(!StringUtil.isEmail(email)) {
-            return null
-        }
-        val member = memberService.getMemberByEmail(email) ?: return null
+        val member = memberService.getMemberByEmail(email) ?: throw UsernameNotFoundException("Not Exist User : $email")
         var password = authentication.credentials as String
         password = EncryptUtil.encryptSHA512(password + member.salt)
+        if(member.lockYn) {
+            throw LockedException("Lock User id : ${member.id}")
+        }
         if(member.password != password) {
-            return null
+            throw BadCredentialsException("Password incorrect id : ${member.id}")
         }
 
         val grantedAuthorityList = ArrayList<GrantedAuthority>()
@@ -64,6 +68,29 @@ class AuthSuccessHandler(
         logger.info("Login Success id : ${member.id}")
         memberService.loginSuccess(member)
         redirectStrategy.sendRedirect(request, response, "/main")
+    }
+}
+
+/**
+ * login 실패시 실행하는 Handler
+ */
+@Component
+class AuthFailureHandler(
+        var memberService: MemberService
+) : SimpleUrlAuthenticationFailureHandler() {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(this::class.java)
+    }
+
+    override fun onAuthenticationFailure(request: HttpServletRequest?, response: HttpServletResponse?, exception: AuthenticationException?) {
+        response!!.status = HttpServletResponse.SC_UNAUTHORIZED
+        logger.info("Login Fail" + exception?.message)
+        val email = request?.getParameter("email")
+        if(email != null) {
+            memberService.loginFail(email)
+        }
+        request?.getRequestDispatcher("/login")?.forward(request,response)
     }
 }
 

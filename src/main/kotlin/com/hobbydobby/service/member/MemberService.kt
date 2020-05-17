@@ -45,6 +45,20 @@ class MemberService(
     }
 
     /**
+     * 로그인 실패로직
+     */
+    fun loginFail(email : String) {
+        val member = memberRepository.findByEmail(email) ?: return
+
+        member.lockCount++
+        if(member.lockCount == 5) {
+            member.lockYn = true
+            member.lockDate = LocalDateTime.now()
+        }
+        memberRepository.save(member)
+    }
+
+    /**
      * 로그인 성공로직
      */
     fun loginSuccess(member : Member) {
