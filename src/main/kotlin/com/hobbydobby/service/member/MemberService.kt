@@ -4,6 +4,7 @@ import com.hobbydobby.domain.member.Member
 import com.hobbydobby.repository.member.MemberRepository
 import com.hobbydobby.util.EncryptUtil
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 /**
  * Member에 대한 Service
@@ -41,6 +42,15 @@ class MemberService(
     } catch (ex : Exception) {
         ex.printStackTrace()
         false
+    }
+
+    /**
+     * 로그인 성공로직
+     */
+    fun loginSuccess(member : Member) {
+        member.lockCount = 0
+        member.lastLoginDate = LocalDateTime.now()
+        memberRepository.save(member)
     }
 
     /**

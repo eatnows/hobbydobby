@@ -37,6 +37,10 @@ class Member(
         @Column
         var introduce : String = "",
         @Column
+        var lockCount : Int = 0,
+        @Column
+        var lastLoginDate : LocalDateTime? = null,
+        @Column
         @CreatedDate
         var registerDate : LocalDateTime? = null,
         @Column
